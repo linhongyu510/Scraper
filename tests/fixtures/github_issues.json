@@ -1,0 +1,25 @@
+[
+  {
+    "id": 201,
+    "number": 1,
+    "title": "Fixture issue",
+    "html_url": "https://github.com/owner/repo/issues/1",
+    "body": "Issue body",
+    "user": {"login": "reporter"},
+    "created_at": "2024-01-02T03:04:05Z",
+    "state": "open",
+    "labels": [{"name": "bug"}]
+  },
+  {
+    "id": 202,
+    "number": 2,
+    "title": "Pull request",
+    "html_url": "https://github.com/owner/repo/pull/2",
+    "body": "Not an issue",
+    "user": {"login": "contributor"},
+    "created_at": "2024-01-03T03:04:05Z",
+    "state": "open",
+    "labels": [],
+    "pull_request": {"url": "https://api.github.com/repos/owner/repo/pulls/2"}
+  }
+]

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Fixture Feed</title>
+  <link href="https://example.com/feed.xml" rel="self"/>
+  <entry>
+    <id>post-1</id>
+    <title>First post</title>
+    <link href="https://example.com/posts/1"/>
+    <updated>2024-03-04T05:06:07Z</updated>
+    <author><name>Feed Author</name></author>
+    <summary>Useful fixture content.</summary>
+  </entry>
+</feed>

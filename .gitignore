@@ -1,0 +1,21 @@
+.DS_Store
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# Local collection and analysis outputs
+/records.*
+/wordcloud.png
+/*.csv
+/*.jsonl
+/*.txt
+/*.xlsx
+/*.png
