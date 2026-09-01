@@ -14,3 +14,8 @@ dist/
 # Local collection and analysis outputs
 /records.*
 /wordcloud.png
+/*.csv
+/*.jsonl
+/*.txt
+/*.xlsx
+/*.png

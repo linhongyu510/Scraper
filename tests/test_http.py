@@ -25,10 +25,10 @@ def test_client_retries_network_error(httpx_mock) -> None:
 
 def test_redact_headers_hides_credentials() -> None:
     redacted = redact_headers(
-        {"Authorization": "Bearer secret", "Cookie": "sid=secret", "Accept": "text/plain"}
+        {"Authorization": "Bearer secret", "cookie": "sid=secret", "Accept": "text/plain"}
     )
 
-    assert redacted == {"Authorization": "***", "Cookie": "***", "Accept": "text/plain"}
+    assert redacted == {"Authorization": "***", "cookie": "***", "Accept": "text/plain"}
 
 
 @pytest.mark.parametrize(
