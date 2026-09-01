@@ -1,0 +1,13 @@
+[
+  {
+    "id": 301,
+    "tag_name": "v1.0.0",
+    "name": "Version 1.0",
+    "html_url": "https://github.com/owner/repo/releases/tag/v1.0.0",
+    "body": "Initial release",
+    "author": {"login": "maintainer"},
+    "published_at": "2024-02-03T04:05:06Z",
+    "draft": false,
+    "prerelease": false
+  }
+]

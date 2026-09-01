@@ -1,0 +1,12 @@
+{
+  "id": 100,
+  "name": "repo",
+  "full_name": "owner/repo",
+  "html_url": "https://github.com/owner/repo",
+  "description": "Fixture repository",
+  "owner": {"login": "owner"},
+  "created_at": "2020-01-01T00:00:00Z",
+  "stargazers_count": 42,
+  "forks_count": 7,
+  "language": "Python"
+}
