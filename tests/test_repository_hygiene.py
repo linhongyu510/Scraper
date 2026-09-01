@@ -30,7 +30,7 @@ def test_tracked_text_files_do_not_contain_session_credentials() -> None:
         "SESS" + "DATA=",
         "bili_" + "jct=",
         "Dede" + "UserID=",
-        "Cookie" + '":',
+        "Cook" + "ie" + chr(34) + ":",
     )
 
     assert scan_tracked_text_files(Path.cwd(), forbidden) == []
