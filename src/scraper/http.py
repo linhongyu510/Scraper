@@ -118,8 +118,7 @@ class HttpClient:
             self._raise_for_status(response)
             if len(response.content) > self.max_response_bytes:
                 raise RemoteResponseError(
-                    f"Response from {url} exceeds maximum size of "
-                    f"{self.max_response_bytes} bytes"
+                    f"Response from {url} exceeds maximum size of {self.max_response_bytes} bytes"
                 )
             return response
 

@@ -13,9 +13,7 @@ class FakeHttp:
     def __init__(self, *, view: object | None = None, danmaku: str | None = None) -> None:
         self.view = view or json.loads((FIXTURES / "bilibili_view.json").read_text())
         self.danmaku = (
-            danmaku
-            if danmaku is not None
-            else (FIXTURES / "bilibili_danmaku.xml").read_text()
+            danmaku if danmaku is not None else (FIXTURES / "bilibili_danmaku.xml").read_text()
         )
 
     def get_json(self, url: str, **_kwargs: object) -> object:

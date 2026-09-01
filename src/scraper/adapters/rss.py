@@ -43,10 +43,7 @@ class RssAdapter:
         author = self._string(entry.get("author"))
         tags_value = entry.get("tags", [])
         tags = (
-            [
-                self._string(self._mapping(tag).get("term"))
-                for tag in cast(list[object], tags_value)
-            ]
+            [self._string(self._mapping(tag).get("term")) for tag in cast(list[object], tags_value)]
             if isinstance(tags_value, list)
             else []
         )

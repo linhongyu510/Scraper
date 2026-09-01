@@ -6,7 +6,6 @@ from typer.testing import CliRunner
 from scraper.cli import app
 from scraper.models import CollectionResult, Record
 
-
 runner = CliRunner()
 
 

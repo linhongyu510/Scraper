@@ -88,9 +88,7 @@ def _read_stopwords(path: Path | None) -> set[str]:
         return set()
     try:
         return {
-            line.strip()
-            for line in path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
+            line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
         }
     except OSError as exc:
         raise ConfigurationError(f"Unable to read stopwords file {path}: {exc}") from exc

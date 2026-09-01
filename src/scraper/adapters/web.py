@@ -6,8 +6,8 @@ import hashlib
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup, Tag
-from soupsieve.util import SelectorSyntaxError
 from pydantic import HttpUrl
+from soupsieve.util import SelectorSyntaxError
 
 from scraper.exceptions import ConfigurationError, ParseError
 from scraper.http import HttpClient
@@ -49,9 +49,7 @@ class WebAdapter:
             absolute_url = urljoin(url, href if isinstance(href, str) else "")
             title_text = title_element.get_text(" ", strip=True) if title_element else ""
             content_text = content_element.get_text(" ", strip=True) if content_element else ""
-            stable_id = hashlib.sha256(
-                f"{absolute_url}\0{content_text}".encode()
-            ).hexdigest()[:20]
+            stable_id = hashlib.sha256(f"{absolute_url}\0{content_text}".encode()).hexdigest()[:20]
             records.append(
                 Record(
                     source=self.source,

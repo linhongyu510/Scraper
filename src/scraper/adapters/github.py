@@ -32,9 +32,7 @@ class GitHubAdapter:
         if not REPO_PATTERN.fullmatch(repo):
             raise ConfigurationError("GitHub repo must use the owner/name format")
         if resource not in RESOURCES:
-            raise ConfigurationError(
-                "GitHub resource must be one of: repository, issues, releases"
-            )
+            raise ConfigurationError("GitHub resource must be one of: repository, issues, releases")
 
         suffix = "" if resource == "repository" else f"/{resource}"
         payload = self.http.get_json(
