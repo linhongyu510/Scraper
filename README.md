@@ -1,3 +1,239 @@
-# Scraper
-# Scraper
-# Scraper
+# Portfolio Scraper
+
+[简体中文](README.zh-CN.md)
+
+Portfolio Scraper is an installable Python CLI for collecting public data from Bilibili,
+GitHub, RSS/Atom feeds, and static web pages. Every adapter produces one normalized record
+model, so the same exporters and offline text-analysis commands work across sources.
+
+The project is a compact reference implementation of adapter-based scraping. It focuses on
+bounded HTTP behavior, deterministic parsing, fixture-driven tests, and responsible use of
+public endpoints. It is not a browser automation, login, or access-control bypass tool.
+
+## Features
+
+- Bilibili public video metadata and XML danmaku
+- GitHub repository metadata, issues, and releases
+- RSS 2.0 and Atom entries
+- Static HTML extraction with CSS selectors
+- UTF-8 JSONL and CSV export with preserved metadata
+- Offline Chinese and mixed-language word frequency analysis
+- Optional PNG word clouds with CJK font discovery
+- Timeouts, bounded retries, request pacing, response-size limits, and redacted headers
+- Typed domain models, offline unit fixtures, and a Python 3.10–3.13 CI matrix
+
+## Installation
+
+Python 3.10 or newer is required.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+```
+
+Install analysis features and development tools when needed:
+
+```bash
+python -m pip install -e ".[analysis]"
+python -m pip install -e ".[dev,analysis]"
+```
+
+## Quick start
+
+Collect a public RSS feed, inspect its most frequent content words, and optionally create a
+word cloud:
+
+```bash
+scraper collect rss \
+  --url https://hnrss.org/frontpage \
+  --output records.jsonl
+
+scraper analyze frequency records.jsonl --field content --top 20
+scraper analyze wordcloud records.jsonl --output wordcloud.png
+```
+
+Collection output is optional. Without `--output`, the command reports record and error
+counts without writing a file. Output paths must end in `.jsonl` or `.csv`.
+
+## Collection commands
+
+All collectors accept `--timeout`, `--retries`, `--request-delay`, `--fail-fast`, and
+`--debug`. The default policy uses a 20-second read timeout, two retries, and no artificial
+delay.
+
+### Bilibili
+
+```bash
+scraper collect bilibili \
+  --bvid BV1xx411c7mD \
+  --output bilibili.jsonl \
+  --request-delay 0.5
+```
+
+The adapter calls public video and XML danmaku endpoints. It does not read or send browser
+cookies.
+
+### GitHub
+
+```bash
+scraper collect github \
+  --repo python/cpython \
+  --resource repository \
+  --output repository.jsonl
+
+scraper collect github \
+  --repo python/cpython \
+  --resource issues \
+  --output issues.csv
+
+scraper collect github \
+  --repo python/cpython \
+  --resource releases \
+  --output releases.jsonl
+```
+
+Pull requests returned by GitHub's issues endpoint are filtered out.
+
+### RSS and Atom
+
+```bash
+scraper collect rss \
+  --url https://hnrss.org/frontpage \
+  --output feed.jsonl
+```
+
+Feed GUIDs are preferred as record IDs. Entries without a GUID receive a deterministic ID
+derived from their link, title, and content.
+
+### Static web pages
+
+```bash
+scraper collect web \
+  --url https://example.com/blog/ \
+  --item article \
+  --title h2 \
+  --content p \
+  --link a \
+  --output posts.csv
+```
+
+Selectors for title, content, and link are evaluated within each matched item. Relative links
+are resolved against the page URL. This adapter fetches the original HTML only; it does not
+execute JavaScript.
+
+## Record format
+
+All sources produce this shape:
+
+```json
+{
+  "source": "rss",
+  "id": "post-1",
+  "title": "Example",
+  "url": "https://example.com/posts/1",
+  "content": "Article summary",
+  "author": "Author",
+  "published_at": "2026-09-01T08:00:00Z",
+  "metadata": {
+    "kind": "entry",
+    "tags": ["python"]
+  }
+}
+```
+
+`source`, `id`, and `url` are required. Source-specific values stay in the JSON-compatible
+`metadata` object.
+
+## Offline analysis
+
+The loader accepts `.jsonl`, `.csv`, and line-oriented `.txt` files.
+
+```bash
+scraper analyze frequency examples/data/sample_danmaku.txt \
+  --field content \
+  --min-length 2 \
+  --top 30
+
+scraper analyze frequency records.jsonl \
+  --stopwords stopwords.txt \
+  --format json
+
+scraper analyze wordcloud records.csv \
+  --field content \
+  --font-path /path/to/CJK-font.ttc \
+  --output cloud.png
+```
+
+The word-cloud command searches common macOS, Linux, and Windows CJK font locations. If no
+font is found, pass `--font-path`.
+
+## Architecture
+
+```text
+CLI
+ ├─ HttpClient: timeout, retry, pacing, response limits
+ ├─ adapters: source response → CollectionResult[Record]
+ ├─ exporters: Record → JSONL or CSV
+ └─ analysis: local file → frequencies or word cloud
+```
+
+The `src` layout keeps imports independent of the repository root. Pydantic validates the
+boundary model, while adapters own only source-specific parsing.
+
+## Extending adapters
+
+Add a module under `src/scraper/adapters/` with a stable `source` attribute and a `collect`
+method that returns `CollectionResult`. Reuse `HttpClient`, convert remote errors to domain
+exceptions, and place source-specific fields in `metadata`. Add compact fixtures and offline
+tests before registering the command in `src/scraper/cli.py`.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for test and fixture expectations.
+
+## Environment variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `GITHUB_TOKEN` | No | Raises GitHub API rate limits for public requests |
+
+Copy `.env.example` as a reference, but export variables through your shell or preferred
+secret manager. The CLI does not automatically load `.env`.
+
+## Security and responsible use
+
+Collect only public data that you are permitted to access. Respect platform terms, robots
+guidance, rate limits, copyright, privacy, and applicable law. Use `--request-delay` to reduce
+request frequency. Never commit cookies, session identifiers, or access tokens.
+
+HTTP diagnostics redact common credential headers. The repository's hygiene test detects
+known Bilibili session fields in tracked text, but previously published Git history must be
+audited and remediated separately if it ever contained live secrets.
+
+## Development
+
+```bash
+ruff format --check .
+ruff check .
+mypy src
+pytest --cov=scraper --cov-report=term-missing
+python -m build
+```
+
+Tests use local fixtures and `pytest-httpx`; the test suite does not require public network
+access.
+
+## Roadmap
+
+- Pagination controls for GitHub resources
+- Per-source collection limits and date filters
+- Additional streaming export options
+- More language-aware tokenization strategies
+
+## Contributing
+
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), start with a failing test,
+and keep network interactions mocked in the test suite.
+
+## License
+
+Released under the [MIT License](LICENSE).
