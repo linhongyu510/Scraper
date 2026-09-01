@@ -1,5 +1,9 @@
 # Portfolio Scraper
 
+[![CI](https://github.com/linhongyu510/Scraper/actions/workflows/ci.yml/badge.svg)](https://github.com/linhongyu510/Scraper/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 [English](README.md)
 
 Portfolio Scraper 是一个可安装的 Python 命令行工具，用于采集 Bilibili、GitHub、
@@ -8,6 +12,8 @@ JSONL/CSV 导出和离线文本分析能力。
 
 项目展示了一套紧凑的适配器式采集架构，重点关注有边界的 HTTP 行为、确定性解析、
 固定夹具测试和公开数据的合规使用。它不提供浏览器自动化、登录或访问控制绕过功能。
+
+![Portfolio Scraper 生成的词云](docs/assets/demo-wordcloud.png)
 
 ## 功能
 
