@@ -1,0 +1,20 @@
+{
+  "code": 0,
+  "message": "0",
+  "data": {
+    "bvid": "BV1xx411c7mD",
+    "title": "Public test video",
+    "desc": "A fixture for parser tests.",
+    "pubdate": 1694592000,
+    "owner": {
+      "name": "fixture-author"
+    },
+    "pages": [
+      {
+        "cid": 123456,
+        "page": 1,
+        "part": "Part 1"
+      }
+    ]
+  }
+}
